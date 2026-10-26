@@ -13,3 +13,4 @@ Rafi,Yoga,1
 Omar,Spin,4
 Gwen,Swim,6
 Tess,Yoga,5
+#Delimeter = commas. String, String, Interger

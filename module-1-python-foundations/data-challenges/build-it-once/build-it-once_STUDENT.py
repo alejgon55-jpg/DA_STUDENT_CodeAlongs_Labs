@@ -68,7 +68,8 @@ SUBMIT
 # 1. Predict two numbers by hand off the file. Total sessions across every
 #    class: add the third field down all 13 records. Total sessions for Swim
 #    only: add that same field, but only on the records whose class is Swim.
-#    Write both in a comment before you run anything.
+#    Write both in a comment before you run anything. 
+#    Every class is 45. Swim only is 15
 # 2. Write total_sessions(records) so it adds up the sessions column across
 #    every record in records and hands the total back with return, not
 #    print.
@@ -78,17 +79,27 @@ SUBMIT
 # The arithmetic is the same arithmetic a plain loop would do. What changes
 # is that the answer comes back to you instead of going to the screen.
 
-with open("data/rec_center_signups.txt") as f:
+with open("../data/rec_center_signups.txt") as f:
     signups = [line for line in f.read().splitlines()
                if line and not line.startswith("#")]
 
 def total_sessions(records):
     # TODO: add up the sessions column across every record in `records`
     # TODO: hand the total back to whoever called this. Do not print it.
-    pass
+    total = 0
+
+    for record in records:
+        fields = record.split(",")
+        total += int(fields[2])
+
+    return total 
 
 swim_only = []
 # TODO: fill swim_only with just the Swim records
+for record in signups: 
+    fields = record.split(",")
+    if fields[1] == "Swim":
+        swim_only.append(record)
 
 print("every class:", total_sessions(signups))
 print("swim only:  ", total_sessions(swim_only))
