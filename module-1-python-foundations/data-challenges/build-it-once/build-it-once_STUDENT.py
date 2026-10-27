@@ -84,8 +84,6 @@ with open("../data/rec_center_signups.txt") as f:
                if line and not line.startswith("#")]
 
 def total_sessions(records):
-    # TODO: add up the sessions column across every record in `records`
-    # TODO: hand the total back to whoever called this. Do not print it.
     total = 0
 
     for record in records:
@@ -95,14 +93,14 @@ def total_sessions(records):
     return total 
 
 swim_only = []
-# TODO: fill swim_only with just the Swim records
+
 for record in signups: 
     fields = record.split(",")
     if fields[1] == "Swim":
         swim_only.append(record)
 
 print("every class:", total_sessions(signups))
-print("swim only:  ", total_sessions(swim_only))
+print("swim only:  ", total_sessions(swim_only)) 
 
 # ===== Step 2: Count Long Bookings at Two Different Cutoffs With One Function =====
 # The board changed the long-booking cutoff from 4 sessions to 2. Answering
@@ -123,15 +121,24 @@ print("swim only:  ", total_sessions(swim_only))
 #
 # One of the two functions you just wrote gives you something back. The
 # other only puts something on the screen.
+# 4 or more: 7
+# 2 or more: 11
 
 def count_long_bookings(records, minimum):
-    # TODO: count the records whose sessions number is `minimum` or more
-    # TODO: return the count
-    pass
+    count = 0
+
+    for record in records:
+        fields = record.split(",")
+        if int(fields[2]) >= minimum:
+            count += 1
+
+    return count 
+    
+
 
 def show_long_bookings(records, minimum):
-    # TODO: print a sentence with the same count in it. Only print.
-    pass
+    count = count_long_bookings(records, minimum)
+    print("long bookings:", count)
 
 print("returned:", count_long_bookings(signups, 4))
 print("returned:", count_long_bookings(signups, 2))
@@ -140,8 +147,8 @@ handed_back = show_long_bookings(signups, 4)
 print("what show_long_bookings handed back:", handed_back)
 
 # Your answer:
-#
-#
+# handed_back holds none because show_long_bookings only prints and does not return anything 
+# minimum is the parameter. 4 and 2 are the arguments. 
 
 # ----- Share Out: Day 1 -----
 # Last 15 minutes, back together as a class. Bring:
@@ -185,20 +192,27 @@ print("what show_long_bookings handed back:", handed_back)
 #
 # Both versions run clean. Decide which of the two you would trust in a file
 # you did not write, and say what in the call line told you.
+# cutoff 4: 7 
+# cutoff 2: 11
 
 sessions_cutoff = 4
 
 def count_reaching_outside(records):
-    # TODO: same count as count_long_bookings, but take NO minimum
-    # parameter. Read sessions_cutoff from outside the function instead.
-    pass
+    count = 0 
+
+    for record in records:
+        fields = record.split(",")
+        if int(fields[2]) >= sessions_cutoff:
+            count += 1
+
+    return count
 
 print("cutoff", sessions_cutoff, "gives", count_reaching_outside(signups))
 
 sessions_cutoff = 2
 
-# TODO: call count_reaching_outside(signups) again, unchanged, and print it
-# TODO: print count_long_bookings(signups, 4) underneath for comparison
+print("cutoff", sessions_cutoff, "gives", count_reaching_outside(signups))
+print("cutoff 4 comparison:", count_long_bookings(signups, 4))
 
 # ===== Step 4: Pass the Last Member In and Out, Then Trigger an UnboundLocalError =====
 # The coordinator wants each sign-up printed next to the one before it. The
@@ -227,16 +241,19 @@ sessions_cutoff = 2
 # the steps after it can run.
 
 def log_signup(record, previous_member):
-    # TODO: pull the member name out of `record`
-    # TODO: print the previous member and this one on one line
-    # TODO: return this member's name
-    pass
+    member = record.split(",")[0]
+    print("previous:", previous_member, "current:", member)
+    return member 
 
 last_member = "nobody yet"
-# TODO: call log_signup on signups[0], then on signups[1], storing
-# what it returns back into last_member each time
+
+last_member = log_signup(signups[0], last_member)
+last_member = log_signup(signups[1], last_member)
 
 last_seen = "nobody yet"
+# previous: nobody yet current: Nia
+# previous: Nia current: Omar
+# I pridict the broken print will not work
 
 def log_signup_broken(record):
     # Leave this body exactly as written. It is supposed to raise.
@@ -244,11 +261,11 @@ def log_signup_broken(record):
     last_seen = record.split(",")[0]
     return last_seen
 
-log_signup_broken(signups[2])
+#log_signup_broken(signups[2])
 
 # Your answer:
-#
-#
+# The error is UnboundLocalError.
+# The variable is last_seen, and the print line tries to use it before assigning it inside the function. 
 
 # ----- Share Out: Day 2 -----
 # Last 15 minutes, back together as a class. Bring:
@@ -294,16 +311,35 @@ log_signup_broken(signups[2])
 # Three function names. Everything else is yours.
 
 def sessions_in(record):
-    pass
+    fields = record.split(",")
+    return int(fields[2])
 
 def signups_for(records, member):
-    pass
+    matching =[]
+
+    for record in records:
+        fields = record.split(",")
+        if fields[0] == member:
+            matching.append(record)
+
+    return matching
 
 def total_for(records, member):
-    # This one should get its work done by calling the other two.
-    pass
+    member_records = signups_for(records, member)
+    total = 0
 
-# TODO: print a line per member
+    for record in member_records:
+        total += sessions_in(record)
+
+    return total 
+
+# Gwen's predicted total: 8
+
+print("Nina:", total_for(signups, "Nia"))
+print("Omar:", total_for(signups, "Omar"))
+print("Tess:", total_for(signups, "Tess"))
+print("Rafi:", total_for(signups, "Rafi"))
+print("Gwen:", total_for(signups, "Gwen"))
 
 # ===== Step 6: Run total_for() on Five Inputs Nobody Asked For, Then Judge Each Answer =====
 # No new functions. Call the ones you already have on inputs nobody asked
@@ -328,11 +364,20 @@ def total_for(records, member):
 # No new functions. Call the ones you already have, on inputs nobody
 # asked for, and write a verdict beside each printed result.
 
-# TODO: an empty list
-# TODO: a list holding exactly one record
-# TODO: a member name that is not in the file at all
-# TODO: a name that differs from a real member's only by capitalization
-# TODO: then: do the per-member totals add up to the whole-file total?
+print("empty list:", total_for([], "Nia"))
+print("one record:", total_for([signups[0]], "Nia"))
+print("missing member:", total_for(signups, "Marco"))
+print("lowercase name:", total_for(signups, "nia"))
+print("signups empty:", signups_for([], "Nia"))
+member_sum = total_for(signups, "Nia") + total_for(signups, "Omar") + total_for(signups, "Tess") + total_for(signups, "Rafi") + total_for(signups, "Gwen")
+print("per-member sum:", member_sum)
+print("whole-file total:", total_sessions(signups))
+
+# empty list: right
+# one record: right
+# missing member: should probably warn us instaed of quietly giving us 0
+# lowercase name: should recognixe Nia instaed of giving 0
+# signups empty right 
 
 # ----- Share Out: Day 3 -----
 # Last 15 minutes, back together as a class. Bring:
