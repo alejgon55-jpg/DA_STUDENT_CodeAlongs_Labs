@@ -29,9 +29,17 @@ fill it in before you run the file again.
 # This is supposed to raise ValueError: run it, read the traceback, then
 # comment out the raising line so the rest of the file runs.
 print('----- 1. Watch This Crash -----')
-quantity = "abc"
-count = int(quantity)
-print("Converted:", count)
+try: 
+   """ quantity = [3, 3, 4]
+    count = int(quantity)
+    print("Converted:", count)
+except ValueError as err:
+    print(f"Raised ValueError as expected: {err}")
+except Exception as err: 
+    print(f"FAILED: expected ValueError, got {type(err).__name__}: {err} ")
+    raise SystemExit(1)
+else:
+    print("FAILED: expected ValueError, but nothing was rasied") """
 
 # PREDICT before you run: This crash is a ValueError. Which error would "5" + 3
 #                         raise? ValueError, TypeError or NameError?
@@ -52,8 +60,14 @@ print("Converted:", count)
 # crashing.
 print('----- 2. Catching the Crash -----')
 # TODO: set quantity = "abc"
+quanity = "abd"
 # TODO: inside a try block, convert it to int and print "Converted:"
 # plus the result
+try: 
+    x = int(quanity)
+    print("Converted:", x)
+except ValueError:
+    print("That's not a valid number.")
 # TODO: in an except ValueError block, print "That's not a valid
 # number."
 
@@ -74,14 +88,26 @@ print('----- 2. Catching the Crash -----')
 # message, and keeps going.
 print('----- 3. Putting It Together: Two except Clauses -----')
 # TODO: define validate_batch(lines)
+def validate_batch(lines):
 # TODO: for each line, inside a try block: split on ",", print
 # "OK:" with fields[1] and int(fields[2])
+    for line in lines: 
+        try: 
+            fields = line.split(",")
+            print("OK.", fields[1], int(fields[2]))
+        except IndexError:
+            print("Bad format:", line)
+        except ValueError:
+            print("Bad quantity:", line)
 # TODO: add an except IndexError clause printing "Bad format:" + line
 # TODO: add an except ValueError clause printing "Bad quantity:" + line
 
 # TODO: create a list called lines with these 3 strings:
 # "ADD,Chess,4", "REMOVE,Uno", "ADD,Dice,two"
 # TODO: call validate_batch(lines)
+
+lines = ["ADD,Chess,4", "REMOVE,Uno", "ADD,Dice,two"]
+validate_batch(lines)
 
 # PREDICT before you run: For "REMOVE,Uno", which step raises the error?
 #                         line.split(","), fields[2], or int(...)?
