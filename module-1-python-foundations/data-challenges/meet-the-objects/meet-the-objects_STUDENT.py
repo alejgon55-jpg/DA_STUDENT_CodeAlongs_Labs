@@ -26,7 +26,7 @@ for i in range(len(names)):
     print(names[i], "|", bikes[i], "bikes")
 
 # Step 1, answer 1:
-#
+# 
 # Step 1, answer 2:
 #
 # Step 1, answer 3:
