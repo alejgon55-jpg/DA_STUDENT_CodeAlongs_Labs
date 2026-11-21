@@ -35,7 +35,7 @@ class BoardGame:
         self.category = category
 
     def is_available(self):
-        return self.players_available >= 0
+        return self.players_available > 0
 
 
 # ===== 2. The Script, Part 2: The Data =====

@@ -9,9 +9,26 @@ print('----- 1. A Tool Class -----')
 # TODO: is_low(self) returns True when count is 1 or less
 # TODO: __repr__(self) returns Tool('drill', 1) style text
 
+class Tool:
+    def __init__(self, name, count):
+        self.name = name
+        self.count = count
+    def is_low(self):
+        if self.count <= 1: 
+            return True
+    def __repr__(self):
+        return f"Tool({self.name},{self.count})"
+        # Dunder repr, returns information to programmers 
 
 # TODO: make drill = Tool("drill", 1) and saw = Tool("saw", 4)
 # TODO: print drill, then drill.is_low() and saw.is_low()
+
+drill = Tool("drill", 1)
+saw = Tool("saw", 4)
+
+print(drill)
+print(drill.is_low())
+print(saw.is_low())
 
 # PREDICT before you run: With no __str__, what does print(drill) show?
 # Your answer:
@@ -28,7 +45,24 @@ FIELDS = {"ADD": 3, "LEND": 2}
 
 
 # TODO: define check_line(line) with a one-line docstring
+def check_line(line):
+    ''' check if a line is valid, return why or none'''
 # TODO: split the stripped line on commas; uppercase the command
+    parts = line.strip().split(",")
+    command = parts[0].upper()
+    if command not in FIELDS:
+        print(f"Skipped: unknown command {parts[0]}")
+        return None
+    if len(parts) != FIELDS[command]:
+        print(f"Skipped: {command} needs {FIELDS[command]} fields")
+    parts [0] = command
+    if command == "ADD":
+        try:
+            parts[1] = int(parts[1])
+        except ValueError:
+            print(f"Skipped: count {parts[1]} is not a number")
+            return None 
+        return parts
 # TODO: unknown command? print why and return None
 # TODO: wrong field count for that command? print why, return None
 # TODO: for ADD, convert the count with int() inside try/except
