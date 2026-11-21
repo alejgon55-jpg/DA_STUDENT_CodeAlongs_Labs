@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Looks Right. Is It?: see DataChallengeOverview&Steps.md for the steps."""
 
-DATA_FILE = "timesheet_hours.csv"  # edit the filepath with the data
+DATA_FILE = "../data/timesheet_hours.csv"  # edit the filepath with the data
 
 with open(DATA_FILE) as f:
     lines = f.read().splitlines()
@@ -10,12 +10,7 @@ with open(DATA_FILE) as f:
 # ===== Day 1 =====
 
 # Step 1: Follow the TypeError in `weekly_hours()` Back to Its Cause
-# TODO: run the file as given and read the traceback from the bottom up
-# TODO: add print(repr(hours)) as the first line of add_hours(); run again
-# TODO: find that printed value in the CSV
-# TODO: fix the line that reads the wrong column to read the hours column
-# TODO: wrap that value in int() so add_hours() adds a number
-# TODO: delete the print(repr(hours)) line once Rosa's total is right
+
 def add_hours(total, hours):
     return total + hours
 
@@ -25,26 +20,22 @@ def weekly_hours(lines, emp_id):
     for row in lines[1:]:
         parts = row.split(",")
         if parts[0] == emp_id:
-            total = add_hours(total, parts[2])
+            total = add_hours(total, int(parts[3]))
     return total
 
 
 print("Rosa Alvarez, weekly hours:", weekly_hours(lines, "E101"))
 
 # Step 1, answer 1:
-#
+# Rosa worked 40 hours 
 # Step 1, answer 2:
-#
+# The last line tells me the error, and the lines above show which functions were called and where it happened. 
 # Step 1, answer 3:
-#
+# The error happend in add_hours(), but the actual bug was in weekly_hours() because it read the wronjg column. 
 
 
 # Step 2: Trace the ZeroDivisionError Back to the Hand-Typed Staff List
-# TODO: run the file as given; note the last ID that printed
-# TODO: compare every ID in `staff` with the IDs in the CSV
-# TODO: replace the hand-typed `staff` list with an empty list
-# TODO: loop over lines[1:]; append each row's employee ID to `staff` once
-# TODO: print "employees in the file:" and len(staff)
+
 def days_worked(lines, emp_id):
     days = 0
     for row in lines[1:]:
@@ -53,7 +44,14 @@ def days_worked(lines, emp_id):
     return days
 
 
-staff = ["E101", "E102", "E103", "E106", "E105"]
+staff = []
+
+for row in lines[1:]:
+    emp_id = row.split(",")[0]
+    if emp_id not in staff:
+        staff.append(emp_id)
+print("employess in the files:", len(staff))
+
 for emp_id in staff:
     hours = weekly_hours(lines, emp_id)
     days = days_worked(lines, emp_id)
@@ -61,20 +59,17 @@ for emp_id in staff:
           "| average per day:", hours / days)
 
 # Step 2, answer 1:
-#
+# There are 5 employees in the csv
 # Step 2, answer 2:
-#
+# Three employee lines printed before the crash. It stopped at E106.
 # Step 2, answer 3:
-#
+# The bug was in the staff list because E106 was not in the CSV, causing divisons by zero. 
 
 
 # ===== Day 2 =====
 
 # Step 3: Find Why Four of the Five Weekly Hour Totals Are Wrong
-# TODO: add up Rosa's (E101) and Mei's (E103) hours by hand first
-# TODO: print("starting", emp, "total is", total) first in the outer loop
-# TODO: move the line that sets `total` inside the outer loop
-# TODO: delete the "starting" print once all five totals are right
+
 records = []
 for row in lines[1:]:
     emp_id, name, day, hours, rate = row.split(",")
@@ -86,8 +81,8 @@ for r in records:
     if r["id"] not in employee_ids:
         employee_ids.append(r["id"])
 
-total = 0
 for emp in employee_ids:
+    total = 0
     name = ""
     for r in records:
         if r["id"] == emp:
@@ -96,20 +91,18 @@ for emp in employee_ids:
     print(emp, name, "| weekly hours:", total)
 
 # Step 3, answer 1:
-#
+# Rosa worked 40 hours and Mei worked 32 hours.
 # Step 3, answer 2:
-#
+# Total kept adding the previous employees's hours because total = 0 was outside the loop. 
 # Step 3, answer 3:
-#
+# Rosa was correct because she started at 0. The other employees had previous hours added. 
 
 
 # Step 4: Fix Two Overtime Bugs That Overpay the Firm by $1,810 a Week
-# TODO: work out Rosa's, Darnell's and Mei's pay by hand first
-# TODO: fix weekly_pay() so it follows the handbook rule word for word
-# TODO: fix the other line that compares `total` against 40 the same way
+
 def weekly_pay(hours, rate):
-    if hours >= 40:
-        return hours * rate * 1.5
+    if hours > 40:
+        return 40 * rate + (hours - 40) * rate * 1.5
     return hours * rate
 
 
@@ -124,7 +117,7 @@ for emp in employee_ids:
             name = r["name"]
             rate = r["rate"]
             total = total + r["hours"]
-    if total >= 40:
+    if total > 40:
         owed_overtime = owed_overtime + 1
     pay = weekly_pay(total, rate)
     payroll = payroll + pay
@@ -134,8 +127,8 @@ print("employees owed overtime:", owed_overtime)
 print(f"TOTAL PAYROLL: ${payroll:,.2f}")
 
 # Step 4, answer 1:
-#
+# Rosa: $960, Darnell: $1543.50, Mei: $896
 # Step 4, answer 2:
-#
+# I fixed weekly_pay so only hours over 40 get overtime pay. I also changed >= to > on line 122. 
 # Step 4, answer 3:
-#
+# Rosa worked exactly 40 hours, so she should only get regular pay and not count as overtime. 
