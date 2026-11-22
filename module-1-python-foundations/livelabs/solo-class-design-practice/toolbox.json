@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Drill",
+        "available_count": 5,
+        "needs_inspection": true
+    },
+    {
+        "name": "Ladder",
+        "available_count": 3,
+        "needs_inspection": false
+    },
+    {
+        "name": "Pressure Washer",
+        "available_count": 2,
+        "needs_inspection": true
+    },
+    {
+        "name": "Hammer",
+        "available_count": 8,
+        "needs_inspection": false
+    },
+    {
+        "name": "Saw",
+        "available_count": 4,
+        "needs_inspection": true
+    }
+]

@@ -28,19 +28,25 @@ SUBMIT
     into the LMS.
 """
 
+import json
+DATA_FILE = "toolbox.json"
+with open(DATA_FILE) as f:
+    tools = json.load(f)
+
 # ===== Step 1: Read the Stakeholder Need =====
 # A new stakeholder need. Not the board-game or office-supply domain from
 # lecture, and not one of the project's own 4 scenarios.
 
 # Your answer:
-#
+# The volunteer coordinator needs to track what tools are available, how many can be borrowed, and whether each tool needs a saftey inspection before being used again. 
 #
 
 # ===== Step 2: Decide Your Attributes, Each With a Reason From the Scenario =====
 
 # Your answer:
-#
-#
+# name: Identifies what tool it is. 
+# avaiable_count: How many are available to use. 
+# needs_inspection: Shows is the tool needs a saftey check before being used again. 
 
 # ===== Step 3: Write __init__ and a Method, From Scratch =====
 # There is no single correct design here. Your class name, your attribute
@@ -48,19 +54,33 @@ SUBMIT
 # right. The test is whether each one traces back to the stakeholder
 # paragraph.
 
-# TODO: Write __init__ and a Method, From Scratch
+class CommunityTool:
+    def __init__(self, name, available_count, needs_inspection):
+        self.name = name
+        self.available_count = available_count
+        self.needs_inspection = needs_inspection
+    def show_availability(self):
+        print(self.name, self.available_count)
 
 # ===== Step 4: Instantiate 2+ Objects, Confirm Independent Storage =====
 # The same proof Day 13's lecture asked for, now on a class you designed
 # yourself. Predict what each print() will show before you run it.
 
-# TODO: Instantiate 2+ Objects, Confirm Independent Storage
+tool1 = CommunityTool(tools[0]["name"], tools[0]["available_count"], tools[0]["needs_inspection"])
+tool2 = CommunityTool(tools[1]["name"], tools[1]["available_count"], tools[1]["needs_inspection"])
+
+tool1.show_availability()
+tool2.show_availability()
+tool1.available_count = 0 
+tool1.show_availability()
+tool2.show_availability()
 
 # ===== Step 5: Justify Your Design Choice in 2-3 Sentences =====
 
 # Your answer:
-#
-#
+# I chose these three attributes because the coordinator needs to know what each tool is, how many are available, and if it needs a saftey inspection. 
+# My show_availability method makes it easy to check the name and number of available_count to borrow. 
+# I also tested two objects to show that changing the drill's quantity does not affect the ladder.  
 
 # ----- Share Out -----
 # Last 15 minutes, back together as a class. Bring:
