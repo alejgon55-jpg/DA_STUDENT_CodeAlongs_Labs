@@ -32,24 +32,83 @@ SUBMIT
 # Use your own class from Day 15's lab - your batch should be full of YOUR
 # objects, not a shared template's.
 
-# TODO: Generate Batches of Your Own Day 15 Class at Three Sizes (10, 1,000, and 100,000)
+import random # Pythons build-in module for random values 
+import time # Pythons build-in module: time.perf_counter() is new 
+
+class SupplyItem:
+    def __init__(self, name, count, department):
+        self.name = name
+        self.count = count
+        self.department = department
+
+def make_batch(size):
+        supplies = []
+        departments = ["Office", "Warehouse", "Storage"]
+
+        for i in range(size):
+            supplies.append(
+                SupplyItem(
+                    f"Item{i}",
+                    random.randint(0,5),
+                    random.choice(departments)
+                )
+            )
+        return supplies
+    
+small_batch = make_batch(10)
+medium_batch = make_batch(1000)
+large_batch = make_batch(100000)
+print(len(small_batch), len(medium_batch), len(large_batch))
+
+
 
 # ===== Step 2: Write Two Searches Over That Batch - a Linear Scan and a Dict Lookup - and Confirm They Agree =====
 # Same two functions Day 16's lecture wrote over SupplyItem - now over your
 # own class and a much bigger batch.
 
-# TODO: Write Two Searches Over That Batch - a Linear Scan and a Dict Lookup - and Confirm They Agree
+def find_by_name_linear(batch, name):
+    for item in batch:
+        if item.name == name:
+            return item
+    return None
+def build_lookup(batch):
+    return {item.name: item for item in batch}
+
+lookup = build_lookup(large_batch)
+print(find_by_name_linear(large_batch, "Item99999").name)
+print(lookup.get("Item99999").name)
+print(find_by_name_linear(large_batch, "NotThere"))
+print(lookup.get("NotThere"))
 
 # ===== Step 3: Put a Stopwatch on Both Searches at All Three Sizes and Record the Numbers =====
 # Predict the pattern before running: which column should grow as size
 # grows, and which should stay roughly flat?
 
-# TODO: Put a Stopwatch on Both Searches at All Three Sizes and Record the Numbers
+# Prediction: Linear search is O(n), so it gets slower as the batch grows. Dictonary lookup is O(1) on average. 
+
+pairs = [
+    (len(small_batch), small_batch),
+    (len(medium_batch), medium_batch),
+    (len(large_batch), large_batch)
+]
+
+for size, batch in pairs:
+    lookup = build_lookup(batch)
+
+    start = time.perf_counter()
+    find_by_name_linear(batch, "NotThere")
+    linear_time = time.perf_counter() - start
+
+    start = time.perf_counter()
+    lookup.get("NotThere")
+    dict_time = time.perf_counter() - start 
+
+    print(size, linear_time, dict_time)
 
 # ===== Step 4: Answer Your Manager's Question in One Sentence, in Big-O Terms =====
 
 # Your answer:
-#
+# As the batch grew to 100,000 items, the O(n) linear search took longer, while the O(1) average dictonary lookup stayed roughly the same speed. 
 #
 
 # ===== Step 5: Optional Stretch: Ask an AI How to Speed Up Your Linear Scan, Then Make It Prove It =====
